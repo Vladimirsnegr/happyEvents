@@ -25,9 +25,6 @@ public class RegistrationController {
     @Autowired
     private UserMapper userMapper;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
     @PostMapping("/api/registration")
     public void registration(@RequestBody UserDto dto) {
         userService.saveUser(userMapper.dtoToUser(dto));
@@ -44,28 +41,4 @@ public class RegistrationController {
 
         return false;
     }
-
-    /*@PostMapping("/api/login")
-    public ResponseEntity<String> login(@RequestParam String username, @RequestParam String password, HttpSession httpSession, HttpServletResponse response) {
-        // Создаем аутентификационный объект
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
-        try {
-            // Попытка аутентификации с использованием AuthenticationManager
-            Authentication authentication = authenticationManager.authenticate(authenticationToken);
-            // Если аутентификация прошла успешно
-            if (authentication.isAuthenticated()) {
-                httpSession.setAttribute("authenticated", true);
-                // Устанавливаем JSESSIONID в куки
-                Cookie cookie = new Cookie("JSESSIONID", httpSession.getId());
-                cookie.setPath("/");
-                response.addCookie(cookie);
-                return ResponseEntity.ok("Login successful");
-            }
-        } catch (org.springframework.security.core.AuthenticationException e) {
-            // Обработка ошибки аутентификации
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed");
-        }
-        // В случае неудачной аутентификации
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed");
-    }*/
 }

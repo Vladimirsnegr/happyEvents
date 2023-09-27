@@ -12,6 +12,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -39,12 +42,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/registration").permitAll()
                 .antMatchers("/api/check-auth").permitAll()
                 .antMatchers("/", "/resources/**", "/images/**").permitAll()
+                .antMatchers("/api/login").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic()
                 .and()
-                .formLogin() // Включаем поддержку формы входа
-                    .loginPage("/api/login") // Страница входа (ваш контроллер)
+                .formLogin()
+                    .loginPage("/api/login")
                     .permitAll()
                     .successHandler(customAuthenticationSuccessHandler)
                     .failureHandler(customAuthenticationFailureHandler);
@@ -53,11 +57,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder managerBuilder) throws Exception {
         managerBuilder.userDetailsService(userService).passwordEncoder(passwordEncoder);
-    }
-
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
     }
 }
